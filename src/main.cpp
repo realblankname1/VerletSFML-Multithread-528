@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 #include "engine/window_context_handler.hpp"
 #include "engine/common/color_utils.hpp"
 
@@ -39,6 +40,9 @@ int main()
     });
 
     // Main loop
+    sf::Clock clock;
+    float lastTime = clock.getElapsedTime().asSeconds();
+    float currentTime, fps;
     const float dt = 1.0f / static_cast<float>(fps_cap);
     while (app.run()) {
         if (solver.objects.size() < 80000 && emit) {
@@ -54,6 +58,17 @@ int main()
         render_context.clear();
         renderer.render(render_context);
         render_context.display();
+
+        currentTime = clock.getElapsedTime().asSeconds();
+        fps = 1.f / (currentTime - lastTime);
+        lastTime = currentTime;
+        if (emit) {
+            std::cout << "FPS: " << fps << std::endl;
+        }
+        if(fps < 60.f && emit){
+            std::cout << "Objects at 60 fps: " << solver.objects.size() << std::endl;
+            emit = false;
+        }
     }
 
     return 0;
