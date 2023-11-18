@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <queue>
 
 #include "engine/window_context_handler.hpp"
 #include "engine/common/color_utils.hpp"
@@ -29,6 +29,8 @@ int main()
 
     bool emit = true;
     constexpr float fps_cap = 30;
+    constexpr int fps_moments = 10;
+    int fps_count = 0;
 
     // Main loop
     sf::Clock clock;
@@ -37,7 +39,7 @@ int main()
     const float dt = 1.0f / static_cast<float>(fps_cap);
     while (app.run()) {
         if (solver.objects.size() < 80000 && emit) {
-            for (uint32_t i{5}; i--;) {
+            for (uint32_t i{25}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
@@ -45,21 +47,27 @@ int main()
         }
 
         solver.update(dt);
+        currentTime = clock.getElapsedTime().asSeconds();
+        fps = 1.f / (currentTime - lastTime);
 
         render_context.clear();
         renderer.render(render_context);
         render_context.display();
 
-        currentTime = clock.getElapsedTime().asSeconds();
-        fps = 1.f / (currentTime - lastTime);
-        lastTime = currentTime;
         if (emit) {
             std::cout << "FPS: " << fps << std::endl;
         }
         if(fps < fps_cap && emit){
-            std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() << std::endl;
-            emit = false;
+            fps_count++;
+            if (fps_count >= fps_moments) {
+                std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() << std::endl;
+                emit = false;
+            }
         }
+        else if (fps >= fps_cap && emit) {
+            fps_count = 0;
+        }
+        lastTime = currentTime;
     }
 
     return 0;
