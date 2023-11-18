@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 #include "engine/window_context_handler.hpp"
 #include "engine/common/color_utils.hpp"
 
@@ -27,22 +28,16 @@ int main()
     render_context.setFocus({world_size.x * 0.5f, world_size.y * 0.5f});
 
     bool emit = true;
-    app.getEventManager().addKeyPressedCallback(sf::Keyboard::Space, [&](sfev::CstEv) {
-        emit = !emit;
-    });
-
-    constexpr uint32_t fps_cap = 60;
-    int32_t target_fps = fps_cap;
-    app.getEventManager().addKeyPressedCallback(sf::Keyboard::S, [&](sfev::CstEv) {
-        target_fps = target_fps ? 0 : fps_cap;
-        app.setFramerateLimit(target_fps);
-    });
+    constexpr float fps_cap = 30;
 
     // Main loop
+    sf::Clock clock;
+    float lastTime = clock.getElapsedTime().asSeconds();
+    float currentTime, fps;
     const float dt = 1.0f / static_cast<float>(fps_cap);
     while (app.run()) {
-        if (solver.objects.size() < 100000 && emit) {
-            for (uint32_t i{20}; i--;) {
+        if (solver.objects.size() < 80000 && emit) {
+            for (uint32_t i{5}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
@@ -54,6 +49,17 @@ int main()
         render_context.clear();
         renderer.render(render_context);
         render_context.display();
+
+        currentTime = clock.getElapsedTime().asSeconds();
+        fps = 1.f / (currentTime - lastTime);
+        lastTime = currentTime;
+        if (emit) {
+            std::cout << "FPS: " << fps << std::endl;
+        }
+        if(fps < fps_cap && emit){
+            std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() << std::endl;
+            emit = false;
+        }
     }
 
     return 0;
