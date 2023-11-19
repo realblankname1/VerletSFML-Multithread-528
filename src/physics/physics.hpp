@@ -32,7 +32,7 @@ struct PhysicSolver
     }
 
     // Checks if two atoms are colliding and if so create a new contact
-    void solveContact(PhysicObject obj_1, PhysicObject* obj_2)
+    void solveContact(PhysicObject& obj_1, PhysicObject& obj_2)
     {
         const Vec2 o2_o1  = obj_1.position - obj_2.position;
         const float dist2 = o2_o1.x * o2_o1.x + o2_o1.y * o2_o1.y;
@@ -57,8 +57,7 @@ struct PhysicSolver
     }
 
     void update_physics(float dt){
-        for (uint32_t i{start}; i < end; ++i) {
-            PhysicObject& obj = objects.data[i];
+        for (auto& obj : objects) {
             // Add gravity
             obj.acceleration += gravity;
             // Apply Verlet integration
@@ -79,9 +78,9 @@ struct PhysicSolver
 
     }
 
-    void update_physics_substeps(float dt, int substeps){
-        const float sub_dt = dt / float(substeps);
-        for (int i{substeps}; i--;){
+    void update_physics_substeps(float dt){
+        const float sub_dt = dt / float(sub_steps);
+        for (uint32_t i{sub_steps}; i--;){
             update_physics(sub_dt);
         }
     }

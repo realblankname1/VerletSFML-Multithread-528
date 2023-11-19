@@ -1,10 +1,11 @@
 #include "renderer.hpp"
 
 
-Renderer::Renderer(PhysicSolver& solver_)
+Renderer::Renderer(PhysicSolver& solver_, tp::ThreadPool& tp)
     : solver{solver_}
     , world_va{sf::Quads, 4}
     , objects_va{sf::Quads}
+    , thread_pool{tp}
 {
     initializeWorldVA();
 
@@ -72,7 +73,7 @@ void Renderer::updateParticlesVA()
 void Renderer::renderHUD(RenderContext&)
 {
     // HUD
-    /*const float margin    = 20.0f;
+    const float margin    = 20.0f;
     float       current_y = margin;
     text_time.setString("Simulation time: " + toString(phys_time.get()) + "ms");
     text_time.setPosition({margin, current_y});
@@ -82,5 +83,5 @@ void Renderer::renderHUD(RenderContext&)
     text_objects.setString("Objects: " + toString(simulation.solver.objects.size()));
     text_objects.setPosition({margin, current_y});
     current_y += text_objects.getBounds().y + 0.5f * margin;
-    context.renderToHUD(text_objects, RenderContext::Mode::Normal);*/
+    context.renderToHUD(text_objects, RenderContext::Mode::Normal);
 }

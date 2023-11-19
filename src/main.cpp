@@ -19,7 +19,7 @@ int main()
 
     tp::ThreadPool thread_pool(10);
     const IVec2 world_size{300, 300};
-    PhysicSolver solver{world_size, thread_pool};
+    PhysicSolver solver{world_size};
     Renderer renderer(solver, thread_pool);
 
     const float margin = 20.0f;
@@ -46,7 +46,7 @@ int main()
             }
         }
 
-        solver.update(dt);
+        solver.update_physics_substeps(dt);
         currentTime = clock.getElapsedTime().asSeconds();
         fps = 1.f / (currentTime - lastTime);
 

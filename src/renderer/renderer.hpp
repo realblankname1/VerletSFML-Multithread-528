@@ -13,7 +13,7 @@ struct Renderer
     sf::Texture     object_texture;
 
     explicit
-    Renderer(PhysicSolver& solver_);
+    Renderer(PhysicSolver& solver_, tp::ThreadPool& tp);
 
     void render(RenderContext& context);
 
