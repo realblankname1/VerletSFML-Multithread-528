@@ -81,6 +81,7 @@ struct PhysicSolver
     void update_physics_substeps(float dt){
         const float sub_dt = dt / float(sub_steps);
         for (uint32_t i{sub_steps}; i--;){
+            find_collisions();
             update_physics(sub_dt);
         }
     }

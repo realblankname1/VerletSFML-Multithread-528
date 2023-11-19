@@ -17,7 +17,8 @@ int main()
     RenderContext& render_context = app.getRenderContext();
     // Initialize solver and renderer
 
-    tp::ThreadPool thread_pool(10);
+
+    tp::ThreadPool thread_pool(10); // Note: The Threadpool is only used for rendering in the serial version
     const IVec2 world_size{300, 300};
     PhysicSolver solver{world_size};
     Renderer renderer(solver, thread_pool);
@@ -30,6 +31,7 @@ int main()
     bool emit = true;
     constexpr float fps_cap = 30;
     constexpr int fps_moments = 10;
+    constexpr int objects_per_iteration = 1;
     int fps_count = 0;
 
     // Main loop
@@ -39,7 +41,7 @@ int main()
     const float dt = 1.0f / static_cast<float>(fps_cap);
     while (app.run()) {
         if (solver.objects.size() < 80000 && emit) {
-            for (uint32_t i{25}; i--;) {
+            for (uint32_t i{1}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
@@ -60,7 +62,7 @@ int main()
         if(fps < fps_cap && emit){
             fps_count++;
             if (fps_count >= fps_moments) {
-                std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() << std::endl;
+                std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() - (fps_moments * objects_per_iteration) << std::endl;
                 emit = false;
             }
         }
