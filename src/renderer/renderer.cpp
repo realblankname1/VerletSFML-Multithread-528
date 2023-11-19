@@ -1,11 +1,10 @@
 #include "renderer.hpp"
 
 
-Renderer::Renderer(PhysicSolver& solver_, tp::ThreadPool& tp)
+Renderer::Renderer(PhysicSolver& solver_)
     : solver{solver_}
     , world_va{sf::Quads, 4}
     , objects_va{sf::Quads}
-    , thread_pool{tp}
 {
     initializeWorldVA();
 
