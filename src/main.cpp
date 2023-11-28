@@ -32,7 +32,7 @@ int main()
     constexpr float fps_sim = 60;
     constexpr float fps_cap = 15;
     constexpr int fps_moments = 10;
-    constexpr int objects_per_iteration = 1;
+    constexpr int objects_per_iteration = 5;
     int fps_count = 0;
 
     // Main loop
@@ -42,7 +42,7 @@ int main()
     const float dt = 1.0f / static_cast<float>(fps_sim);
     while (app.run()) {
         if (solver.objects.size() < 80000 && emit) {
-            for (uint32_t i{5}; i--;) {
+            for (uint32_t i{objects_per_iteration}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
