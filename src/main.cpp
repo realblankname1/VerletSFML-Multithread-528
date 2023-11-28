@@ -41,7 +41,7 @@ int main()
     const float dt = 1.0f / static_cast<float>(fps_cap);
     while (app.run()) {
         if (solver.objects.size() < 80000 && emit) {
-            for (uint32_t i{1}; i--;) {
+            for (uint32_t i{5}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
