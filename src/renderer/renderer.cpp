@@ -16,7 +16,6 @@ Renderer::Renderer(PhysicSolver& solver_, tp::ThreadPool& tp)
 
 void Renderer::render(RenderContext& context)
 {
-    renderHUD(context);
     context.draw(world_va);
 
     sf::RenderStates states;
@@ -68,20 +67,4 @@ void Renderer::updateParticlesVA()
             objects_va[idx + 3].color = color;
         }
     });
-}
-
-void Renderer::renderHUD(RenderContext&)
-{
-    // HUD
-    const float margin    = 20.0f;
-    float       current_y = margin;
-    text_time.setString("Simulation time: " + toString(phys_time.get()) + "ms");
-    text_time.setPosition({margin, current_y});
-    current_y += text_time.getBounds().y + 0.5f * margin;
-    context.renderToHUD(text_time, RenderContext::Mode::Normal);
-
-    text_objects.setString("Objects: " + toString(simulation.solver.objects.size()));
-    text_objects.setPosition({margin, current_y});
-    current_y += text_objects.getBounds().y + 0.5f * margin;
-    context.renderToHUD(text_objects, RenderContext::Mode::Normal);
 }
