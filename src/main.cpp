@@ -28,7 +28,8 @@ int main()
     render_context.setFocus({world_size.x * 0.5f, world_size.y * 0.5f});
 
     bool emit = true;
-    constexpr float fps_cap = 50;
+    constexpr float fps_sim = 60;
+    constexpr float fps_cap = 60;
     constexpr int fps_moments = 10;
     int fps_count = 0;
 
@@ -36,7 +37,7 @@ int main()
     sf::Clock clock;
     float lastTime = clock.getElapsedTime().asSeconds();
     float currentTime, fps;
-    const float dt = 1.0f / static_cast<float>(fps_cap);
+    const float dt = 1.0f / static_cast<float>(fps_sim);
     while (app.run()) {
         if (solver.objects.size() < 100000 && emit) {
             for (uint32_t i{25}; i--;) {
