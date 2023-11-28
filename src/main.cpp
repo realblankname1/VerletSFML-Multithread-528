@@ -12,13 +12,13 @@
 int main()
 {
     const uint32_t window_width  = 1920;
-    const uint32_t window_height = 1080;
+    const uint32_t window_height = 1200;
     WindowContextHandler app("Verlet-MultiThread", sf::Vector2u(window_width, window_height), sf::Style::Default);
     RenderContext& render_context = app.getRenderContext();
     // Initialize solver and renderer
 
     tp::ThreadPool thread_pool(10);
-    const IVec2 world_size{300, 300};
+    const IVec2 world_size{600, 600};
     PhysicSolver solver{world_size, thread_pool};
     Renderer renderer(solver, thread_pool);
 
@@ -29,8 +29,9 @@ int main()
 
     bool emit = true;
     constexpr float fps_sim = 60;
-    constexpr float fps_cap = 60;
-    constexpr int fps_moments = 10;
+    constexpr float fps_cap = 30;
+    constexpr int fps_moments = 100;
+    constexpr int objects_per_iteration = 250;
     int fps_count = 0;
 
     // Main loop
@@ -39,8 +40,8 @@ int main()
     float currentTime, fps;
     const float dt = 1.0f / static_cast<float>(fps_sim);
     while (app.run()) {
-        if (solver.objects.size() < 100000 && emit) {
-            for (uint32_t i{25}; i--;) {
+        if (solver.objects.size() < 300000 && emit) {
+            for (uint32_t i{objects_per_iteration}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
                 solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
@@ -61,7 +62,7 @@ int main()
         if(fps < fps_cap && emit){
             fps_count++;
             if (fps_count >= fps_moments) {
-                std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() << std::endl;
+                std::cout << "Objects at " << fps_cap << " fps: " << solver.objects.size() - (fps_moments * objects_per_iteration) << std::endl;
                 emit = false;
             }
         }
