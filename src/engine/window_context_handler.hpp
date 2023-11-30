@@ -43,6 +43,7 @@ public:
         });
         event_manager.addEventCallback(sf::Event::MouseWheelScrolled, [&](sfev::CstEv e) {
             m_viewport_handler.wheelZoom(e.mouseWheelScroll.delta);
+            // m_viewport_handler.setMouseZoom(e.mouseWheelScroll.delta, sf::Vector2f(e.mouseWheelScroll.x, e.mouseWheelScroll.y));
         });
     }
     

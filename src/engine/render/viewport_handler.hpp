@@ -67,6 +67,19 @@ struct ViewportHandler
         }
     }
 
+    // void setMouseZoom(float w, sf::Vector2f new_mouse_position)
+    // {
+    //     if (w) {
+    //         const float zoom_amount = 1.2f;
+    //         const float delta = w > 0 ? zoom_amount : 1.0f / zoom_amount;
+    //         state.updateMousePosition(new_mouse_position);
+    //         state.center = state.mouse_world_position;
+    //         state.offset = state.center / state.zoom;
+    //         state.zoom *= delta;
+    //         state.updateState();
+    //     }
+    // }
+
     void reset()
     {
         state.zoom = 1.0f;
