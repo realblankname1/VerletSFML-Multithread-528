@@ -44,7 +44,7 @@ int main()
             for (uint32_t i{objects_per_iteration}; i--;) {
                 const auto id = solver.createObject({2.0f, 10.0f + 1.1f * i});
                 solver.objects[id].last_position.x -= 0.2f;
-                solver.objects[id].color = ColorUtils::getRainbow(id * 0.0001f);
+                solver.objects[id].color = ColorUtils::getRainbow(id * 0.00001f);
             }
         }
 

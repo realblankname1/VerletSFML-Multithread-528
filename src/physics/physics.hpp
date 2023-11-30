@@ -142,11 +142,11 @@ struct PhysicSolver
         thread_pool.dispatch(to<uint32_t>(objects.size()), [&](uint32_t start, uint32_t end){
             for (uint32_t i{start}; i < end; ++i) {
                 PhysicObject& obj = objects.data[i];
-                // Add gravity
+                // Apply acceleration
                 obj.acceleration += gravity;
-                // Apply Verlet integration
+                // Update object with physics package
                 obj.update(dt);
-                // Apply map borders collisions
+                // Border Collisions
                 const float margin = 2.0f;
                 if (obj.position.x > world_size.x - margin) {
                     obj.position.x = world_size.x - margin;
