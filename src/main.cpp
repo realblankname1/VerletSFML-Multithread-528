@@ -29,7 +29,7 @@ int main()
 
     bool emit = true;
     constexpr float fps_sim = 60;
-    constexpr float fps_cap = 60;
+    constexpr float fps_cap = 30;
     constexpr int fps_moments = 100;
     constexpr int objects_per_iteration = 250;
     int fps_count = 0;
