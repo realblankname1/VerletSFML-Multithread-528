@@ -19,7 +19,7 @@ int main()
 
 
     tp::ThreadPool thread_pool(10); // Note: The Threadpool is only used for rendering in the serial version
-    const IVec2 world_size{300, 300};
+    const IVec2 world_size{75, 75};
     PhysicSolver solver{world_size};
     Renderer renderer(solver, thread_pool);
 
