@@ -1,5 +1,4 @@
 #pragma once
-#include "collision_grid.hpp"
 #include "physic_object.hpp"
 #include "engine/common/utils.hpp"
 #include "engine/common/index_vector.hpp"
@@ -9,7 +8,6 @@
 struct PhysicSolver
 {
     CIVector<PhysicObject> objects;
-    CollisionGrid          grid;
     Vec2                   world_size;
     Vec2                   gravity = {0.0f, 20.0f};
 
@@ -19,10 +17,9 @@ struct PhysicSolver
     float           radius = 1.0f;
     uint32_t        sub_steps;
 
-    PhysicSolver(IVec2 size)
-        : grid{size.x, size.y}
-        , world_size{to<float>(size.x), to<float>(size.y)}
-        , sub_steps{8}
+    PhysicSolver(IVec2 size) :
+        world_size{to<float>(size.x), to<float>(size.y)}, 
+        sub_steps{8}
     {}
 
     // Add a new object to the solver
