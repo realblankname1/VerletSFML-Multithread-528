@@ -25,11 +25,11 @@ struct PhysicSolver
         thread_pool{pool}
         {grid.clear();}
 
-    void solveCellCollisions(uint32_t atom_idx, const CollisionCell& c){
+    void solveCellCollisions(uint32_t obj_id, const CollisionCell& c){
         constexpr float response_coef = 1.0f;
         constexpr float eps           = 0.0001f;
         for (uint32_t i{0}; i < c.object_count; ++i) {
-            PhysicObject& obj_1 = objects.data[atom_idx];
+            PhysicObject& obj_1 = objects.data[obj_id];
             PhysicObject& obj_2 = objects.data[c.object_ids[i]];
             const Vec2 o2_o1  = obj_1.position - obj_2.position;
             const float dist2 = o2_o1.x * o2_o1.x + o2_o1.y * o2_o1.y;
@@ -46,18 +46,22 @@ struct PhysicSolver
 
     void solveCollisionThreaded(uint32_t start, uint32_t end)
     {
+        // Iterate through provided grid cells
         for (uint32_t idx{start}; idx < end; ++idx) {
+            // check iterate through objects contained in grid
             for (uint32_t i{0}; i < grid.data[idx].object_count; ++i) {
-                const uint32_t atom_idx = grid.data[idx].object_ids[i];
-                solveCellCollisions(atom_idx, grid.data[idx - 1]);
-                solveCellCollisions(atom_idx, grid.data[idx]);
-                solveCellCollisions(atom_idx, grid.data[idx + 1]);
-                solveCellCollisions(atom_idx, grid.data[idx + grid.height - 1]);
-                solveCellCollisions(atom_idx, grid.data[idx + grid.height    ]);
-                solveCellCollisions(atom_idx, grid.data[idx + grid.height + 1]);
-                solveCellCollisions(atom_idx, grid.data[idx - grid.height - 1]);
-                solveCellCollisions(atom_idx, grid.data[idx - grid.height    ]);
-                solveCellCollisions(atom_idx, grid.data[idx - grid.height + 1]);
+                // grab object id
+                const uint32_t obj_id = grid.data[idx].object_ids[i];
+                // Check for collisions in the nearby grids
+                solveCellCollisions(obj_id, grid.data[idx - 1]);                // upper grid
+                solveCellCollisions(obj_id, grid.data[idx]);                    // same grid
+                solveCellCollisions(obj_id, grid.data[idx + 1]);                // lower grid
+                solveCellCollisions(obj_id, grid.data[idx + grid.height - 1]);  // upper right grid
+                solveCellCollisions(obj_id, grid.data[idx + grid.height    ]);  // right grid
+                solveCellCollisions(obj_id, grid.data[idx + grid.height + 1]);  // lower right grid
+                solveCellCollisions(obj_id, grid.data[idx - grid.height - 1]);  // upper left grid
+                solveCellCollisions(obj_id, grid.data[idx - grid.height    ]);  // left grid
+                solveCellCollisions(obj_id, grid.data[idx - grid.height + 1]);  // lower left grid
             }
         }
     }
@@ -116,24 +120,28 @@ struct PhysicSolver
 
     void update(float dt)
     {
-        // Perform the sub steps
+        // adjust time to account for substeps
         const float sub_dt = dt / static_cast<float>(sub_steps);
         for (uint32_t i(sub_steps); i--;) {
+            // populate grids
             addGridObjects();
+            // perform collision logic
             solveCollisions();
             updateObjects_multi(sub_dt);
         }
     }
-
+    // This is where objects are added to the grid
+    // Essentiall the grid is cleared so no objects are recorded in the grid
+    // the object ids are then added to grid cells in which they reside
     void addGridObjects() {
         grid.clear();
-        uint32_t overlap_spacing = 0;
+        uint32_t obj_id = 0;
         for (const PhysicObject& obj : objects.data) {
             if (obj.position.x > 1.0f && obj.position.x < world_size.x - 1.0f &&
                 obj.position.y > 1.0f && obj.position.y < world_size.y - 1.0f) {
-                    grid.addObject(to<int32_t>(obj.position.x), to<int32_t>(obj.position.y), overlap_spacing);
+                    grid.addObject(to<int32_t>(obj.position.x), to<int32_t>(obj.position.y), obj_id);
                 }
-            overlap_spacing++;
+            obj_id++;
         }
     }
 
