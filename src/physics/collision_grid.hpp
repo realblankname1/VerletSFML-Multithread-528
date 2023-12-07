@@ -22,16 +22,6 @@ struct CollisionCell{
 	void clear(){
 		object_count = 0u;
 	}
-
-	// void remove(uint32_t id) {
-	// 	for (uint32_t i{0}; i < object_count; i++){
-	// 		if (objects[i] == id) {
-	// 			objects[i] = objects[object_count - 1];
-	// 			--object_count;
-	// 			return;
-	// 		}
-	// 	}
-	// }
 };
 
 struct CollisionGrid : public Grid<CollisionCell>
