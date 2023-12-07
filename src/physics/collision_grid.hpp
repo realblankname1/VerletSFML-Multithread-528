@@ -13,7 +13,6 @@ struct CollisionCell{
 	CollisionCell() = default;
 
 	// Adds object to cell
-	// I genuinely don't understand the logic of this code
 	void addObject(uint32_t id){
 		object_ids[object_count] = id;
 		object_count += object_count < max_idx;
