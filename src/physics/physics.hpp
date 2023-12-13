@@ -71,7 +71,7 @@ struct PhysicSolver
         const uint32_t thread_count = thread_pool.m_thread_count;
         const uint32_t num_slices = thread_count * 2;
         const uint32_t slice_size = (grid.width / num_slices) * grid.height;
-        const uint32_t start_remainder = (2 * (thread_count - 1) + 2) * slice_size;
+        const uint32_t start_remainder = (2 * thread_count) * slice_size;
         // Finds collisions in two passes to avoid data races
 
         // First pass (Even Slices)
